@@ -12,7 +12,7 @@ async def clientHandler(websocket: websockets.WebSocketServerProtocol, path):
     try:
         async for message in websocket:
             print("Message received: ", message)
-            await websocket.send(f"Echo: {message}")
+            await websocket.send(f"Echo NEW: {message}")
 
 
     except Exception as e:
