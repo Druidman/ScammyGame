@@ -12,7 +12,7 @@ class GameSession:
         self.ended: bool = False
 
 
-        self.CHATTING_PHASE_TIME = 5 #s\
+        self.CHATTING_PHASE_TIME = 10 #s\
         self.COINS_PER_ROUND = 50
 
         self.guesser = self.player1
@@ -58,6 +58,7 @@ class GameSession:
         await receiver.sendMsg(msg)
         
     async def chattingPhase(self):
+        print("chatting...")
         if not await self.player1.sendMsg(START_CHATTING_PHASE_MSG):
             print("Error when sending chatting phase start com to player1")
         if not await self.player2.sendMsg(START_CHATTING_PHASE_MSG):
@@ -125,11 +126,11 @@ class GameSession:
         question: str = self.available_questions[questionInd]
         shouldLie: bool = bool(random.randint(0,1))
 
-        responderAnswer: bool = self.askQuestionToPlayer(question=question, shouldLie=shouldLie)
+        responderAnswer: bool = await self.askQuestionToPlayer(question=question, shouldLie=shouldLie)
 
         # send answer and question to  second player
         # receive answer
-        guesserAnswer: bool = self.toVerifyAnswerPlayer(question=question, answer=responderAnswer)
+        guesserAnswer: bool = await self.toVerifyAnswerPlayer(question=question, answer=responderAnswer)
 
         # compare answers
         realResponderAnswer: bool = responderAnswer
@@ -172,9 +173,11 @@ class GameSession:
 
 
         print("Starting rounds....")
+        self.guesser = self.player1
+        self.responder = self.player2
         for i in range(5):
             print(f"Round {i}. START!")
-            self.startRound(i)
+            await self.startRound(i)
             print(f"Round {i}. END!")
         print("game done")
 

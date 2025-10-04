@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyGame</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <div id="gameWaiter" class="mainBox" >
+        <p id="connectingWaiter">Connecting...</p>
+        <p id="gameAssignementWaiter">Game assigned...</p>
+    </div>
+
+    <div id="chatBox" class="mainBox" style="display: none;">
+        <div id="messagesFromPlayer2"></div>
+        <input id="chatInput" type="text" placeholder="Type here...">
+    </div>
+
+    <div id="gameBox" class="mainBox" style="display: none;">
+        <div id="guesserBox" style="display: none;">
+            <p id="guesserQuestionBox"></p>
+            <button id="guesserTruthButton">True</button>
+            <button id="guesserFalseButton">False</button>
+        </div>
+        <div id="responderBox" style="display: none;">
+            <p id="responderQuestionBox"></p>
+            <button id="responderTruthButton">True</button>
+            <button id="responderFalseButton">False</button>
+        </div>
+
+    </div>
+    <script src="index.js" type="module"></script>
+</body>
+</html>

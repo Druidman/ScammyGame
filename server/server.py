@@ -56,27 +56,35 @@ class Server:
 
     async def clientHandler(self, server: websockets.WebSocketServerProtocol):
         print(f"client connected!")
-        client: Client = Client(server)
-
-        self.clients.append(client)
-        self.unassigned_clients.append(client)
+        
         try:
+            
+            client: Client = Client(server)
+
+            self.clients.append(client)
+            self.unassigned_clients.append(client)
+            
             await client.sendMsg(CONNECTION_MSG(True))
             print("sent succesfull connection")
             
             async for msg in server:
                 client.messages.append(msg)
+        except websockets.ConnectionClosed:
+            print("Connection closed dirty")
         finally:
+            print("client disconnected...")
+            if (not client):
+                return
             client.closed = True
-
-            self.clients.remove(client)
+            if (client in self.clients):
+                self.clients.remove(client)
             if (not client.gameSession):
                 self.unassigned_clients.remove(client)
             else:
                 await client.gameSession.stop()
             
             
-            print("client disconnected...")
+            
 
         
             

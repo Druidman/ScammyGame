@@ -15,6 +15,7 @@ class Client:
         self.closed = False
 
     async def sendMsg(self, msg: dict) -> bool:
+
         if self.websocket.closed:
             return False
         await self.websocket.send(json.dumps(msg))
