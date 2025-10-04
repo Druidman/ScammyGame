@@ -1,5 +1,6 @@
 from ..globals.communication import *
-import websockets, asyncio, time
+from ..globals.game_questions import *
+import websockets, asyncio, time, random
 
 class GameSession:
     
@@ -13,6 +14,11 @@ class GameSession:
 
         self.CHATTING_PHASE_TIME = 5 #s\
         self.COINS_PER_ROUND = 50
+
+        self.guesser = self.player1
+        self.responder = self.player2
+
+        self.available_questions = GAME_QUESTIONS
 
     async def checkIfPlayersReady(self) -> bool:
         await self.player1.sendMsg(REQUEST_STATUS_MSG)
@@ -51,11 +57,6 @@ class GameSession:
         
         await receiver.sendMsg(msg)
         
-        
-
-
-      
-
     async def chattingPhase(self):
         if not await self.player1.sendMsg(START_CHATTING_PHASE_MSG):
             print("Error when sending chatting phase start com to player1")
@@ -81,8 +82,76 @@ class GameSession:
     async def giveCoins(self): 
         self.player1.coins = self.COINS_PER_ROUND
         self.player2.coins = self.COINS_PER_ROUND
+
+    async def askQuestionToPlayer(self, question: str, shouldLie: bool) -> bool:
+        
+
+        #ask the question
+        if not await self.responder.sendMsg(GAME_QUESTION_MSG(question, shouldLie)):
+            print("Error when sending question com to responder")
+        
+        #get answer
+        msg = await self.responder.receiveMsg()
+        if (msg["MSG_TYPE"] != GAME_QUESTION_REPLY_TYPE):
+            print("WRONG answer msg type in askQuestionToPlayer")
+        
+        return msg["VALUE"]
+    
+    async def toVerifyAnswerPlayer(self, question: str, answer: str) -> bool:
+    
+        #ask to verify
+        if not await self.guesser.sendMsg(GAME_QUESTION_VERIFY(question, answer)):
+            print("Error when sending question verify com to guesser")
+        
+        #get answer
+        msg = await self.guesser.receiveMsg()
+        if (msg["MSG_TYPE"] != GAME_QUESTION_VERIFY_REPLY_TYPE):
+            print("WRONG answer msg type in toVerifyAnswerPlayer")
+        
+        return msg["VALUE"]
+        
+
+
     async def startRound(self, i: int):
-        pass
+        # send round start
+        if not await self.player1.sendMsg(ROUND_START_MSG):
+            print("Error when sending round start com to player1")
+        if not await self.player2.sendMsg(ROUND_START_MSG):
+            print("Error when sending round start com to player2")
+
+        # send question to player
+        # receive answer
+        questionInd: int = random.randint(0,len(self.available_questions))
+        question: str = self.available_questions[questionInd]
+        shouldLie: bool = bool(random.randint(0,1))
+
+        responderAnswer: bool = self.askQuestionToPlayer(question=question, shouldLie=shouldLie)
+
+        # send answer and question to  second player
+        # receive answer
+        guesserAnswer: bool = self.toVerifyAnswerPlayer(question=question, answer=responderAnswer)
+
+        # compare answers
+        realResponderAnswer: bool = responderAnswer
+        if (shouldLie):
+            # If user was prompted to lie then his actual answer would have been negation of real one
+            realResponderAnswer = not responderAnswer
+
+        # if guesserAnswer is true then it means that we think that responders answer is true
+        if (guesserAnswer == realResponderAnswer):
+            # guessed!
+            self.guesser.coins += 1
+        else:
+            # not guessed !
+            self.responder.coins += 1
+
+        # send round end
+        if not await self.player1.sendMsg(ROUND_END_MSG):
+            print("Error when sending round end com to player1")
+        if not await self.player2.sendMsg(ROUND_END_MSG):
+            print("Error when sending round end com to player2")
+
+        return
         
     async def runGame(self):
         print("Starting game...")
