@@ -19,6 +19,9 @@ async def getMsg() -> dict:
 
     return data
 
+
+
+
 async def testGame(websocket: websockets.WebSocketServerProtocol):
     response = await getMsg()
     if (response["MSG_TYPE"] != CONNECTION_MSG_TYPE or not response["VALUE"]):
@@ -37,8 +40,48 @@ async def testGame(websocket: websockets.WebSocketServerProtocol):
             return
         print("Client couldn't get game succesfully")
         exit()
+
+
+    response = await getMsg()
+    if (response["MSG_TYPE"] != REQUEST_STATUS_MSG_TYPE or not response["VALUE"]):
+        if (response["MSG_TYPE"] == DISCONNECT_MSG_TYPE):
+            print("server closed connection!")
+            return
+        print("Not request status")
+        exit()
+
+    await websocket.send(json.dumps(STATUS_MSG(True)))
+
     
-    print("full client cycle done!")
+    
+    print("Client is in game with other opponent!")
+
+    response = await getMsg()
+    if (response["MSG_TYPE"] != START_CHATTING_PHASE_MSG_TYPE):
+        if (response["MSG_TYPE"] == DISCONNECT_MSG_TYPE):
+            print("server closed connection!")
+            return
+        print("Not chatting start msg")
+        exit()
+
+    await websocket.send(json.dumps(CHAT_MSG("Starting msg...")))
+    response = await getMsg()
+    while (response["MSG_TYPE"] != END_CHATTING_PHASE_MSG_TYPE):
+        if (response["MSG_TYPE"] == DISCONNECT_MSG_TYPE):
+            print("server closed connection!")
+            return
+        if (response["MSG_TYPE"] != CHAT_MSG_TYPE):
+            print("Got different msg type during chatting phase!!!")
+            return
+        
+        print(f"Received msg: {response['VALUE']}")
+        await websocket.send(json.dumps(CHAT_MSG("I got your msg")))
+
+        response = await getMsg()
+
+    print("End of chatting...")
+    print("full client cycle done!...")
+    
 
 
     print("closing connection")

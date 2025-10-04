@@ -3,6 +3,8 @@ import websockets, asyncio
 from typing import List
 import json
 
+from ..globals.communication import *
+
 class Client:
     def __init__(self, ws: websockets.WebSocketServerProtocol):
         self.gameSession: GameSession = None
@@ -23,7 +25,7 @@ class Client:
             while len(self.messages) == 0: await asyncio.sleep(0)
         else:
             if (len(self.messages) == 0):
-                return ""
+                return NONE_MSG
             
         message: str = self.messages[0]
 

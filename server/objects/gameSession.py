@@ -11,7 +11,7 @@ class GameSession:
         self.ended: bool = False
 
 
-        self.CHATTING_PHASE_TIME = 30 #s
+        self.CHATTING_PHASE_TIME = 5 #s
 
     async def checkIfPlayersReady(self) -> bool:
         await self.player1.sendMsg(REQUEST_STATUS_MSG)
@@ -41,17 +41,25 @@ class GameSession:
             await self.player2.sendMsg(DISCONNECT_MSG)
         self.ended = True
     
-    async def handleChatMsg(msg: str, receiver):
-        if (msg == ""):
+    async def handleChatMsg(self,msg: str, receiver):
+        if (msg == NONE_MSG):
             return 
+        
+        if (msg["MSG_TYPE"] != CHAT_MSG_TYPE):
+            return
+        
+        await receiver.sendMsg(msg)
+        
+        
+
 
       
 
     async def chattingPhase(self):
-        if not await self.player1.sendMsg("CHATTING_PHASE"):
-            print("Error when sending chatting phase com to player1")
-        if not await self.player2.sendMsg("CHATTING_PHASE"):
-            print("Error when sending chatting phase com to player2")
+        if not await self.player1.sendMsg(START_CHATTING_PHASE_MSG):
+            print("Error when sending chatting phase start com to player1")
+        if not await self.player2.sendMsg(START_CHATTING_PHASE_MSG):
+            print("Error when sending chatting phase start com to player2")
 
         startTime = time.time()
         while (time.time() - startTime < self.CHATTING_PHASE_TIME):
@@ -60,6 +68,16 @@ class GameSession:
 
             msgFromP2 = await self.player2.receiveMsg(False)
             await self.handleChatMsg(msgFromP2, self.player1)
+
+
+            await asyncio.sleep(0)
+
+        if not await self.player1.sendMsg(END_CHATTING_PHASE_MSG):
+            print("Error when sending chatting phase end com to player1")
+        if not await self.player2.sendMsg(END_CHATTING_PHASE_MSG):
+            print("Error when sending chatting phase end com to player2")
+
+        
     async def runGame(self):
         print("Starting game...")
 
@@ -68,10 +86,14 @@ class GameSession:
             print("Players not ready")
             await self.stop()
             return
-        print("player ready!")
+        print("players ready!")
 
 
         await self.chattingPhase()
+        print("End of chatting!")
+        
+        print("Stopping the game")
+        await self.stop()
         
         
         

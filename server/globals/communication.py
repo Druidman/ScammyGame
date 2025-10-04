@@ -44,8 +44,15 @@ END_CHATTING_PHASE_MSG = {
 
 
 
+
 CHAT_MSG_TYPE = "CHAT_MSG"
 CHAT_MSG = lambda val : {
     "MSG_TYPE": CHAT_MSG_TYPE,
     "VALUE": val
+}
+
+NONE_MSG_TYPE = "NONE"
+NONE_MSG = {
+    "MSG_TYPE": NONE_MSG_TYPE,
+    "VALUE": ""
 }
