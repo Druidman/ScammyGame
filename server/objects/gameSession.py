@@ -11,7 +11,8 @@ class GameSession:
         self.ended: bool = False
 
 
-        self.CHATTING_PHASE_TIME = 5 #s
+        self.CHATTING_PHASE_TIME = 5 #s\
+        self.COINS_PER_ROUND = 50
 
     async def checkIfPlayersReady(self) -> bool:
         await self.player1.sendMsg(REQUEST_STATUS_MSG)
@@ -77,6 +78,11 @@ class GameSession:
         if not await self.player2.sendMsg(END_CHATTING_PHASE_MSG):
             print("Error when sending chatting phase end com to player2")
 
+    async def giveCoins(self): 
+        self.player1.coins = self.COINS_PER_ROUND
+        self.player2.coins = self.COINS_PER_ROUND
+    async def startRound(self, i: int):
+        pass
         
     async def runGame(self):
         print("Starting game...")
@@ -91,7 +97,18 @@ class GameSession:
 
         await self.chattingPhase()
         print("End of chatting!")
-        
+
+        print("Giving coins...")
+        await self.giveCoins()
+
+
+        print("Starting rounds....")
+        for i in range(5):
+            print(f"Round {i}. START!")
+            self.startRound(i)
+            print(f"Round {i}. END!")
+        print("game done")
+
         print("Stopping the game")
         await self.stop()
         
