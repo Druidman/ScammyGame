@@ -98,9 +98,10 @@ class GameSession:
         
         return msg["VALUE"]
     
-    async def toVerifyAnswerPlayer(self, question: str, answer: str) -> bool:
+    async def toVerifyAnswerPlayer(self, question: str, answer: bool) -> bool:
     
         #ask to verify
+     
         if not await self.guesser.sendMsg(GAME_QUESTION_VERIFY(question, answer)):
             print("Error when sending question verify com to guesser")
         
@@ -122,15 +123,16 @@ class GameSession:
 
         # send question to player
         # receive answer
-        questionInd: int = random.randint(0,len(self.available_questions))
+        questionInd: int = random.randint(0,len(self.available_questions)-1)
         question: str = self.available_questions[questionInd]
         shouldLie: bool = bool(random.randint(0,1))
 
         responderAnswer: bool = await self.askQuestionToPlayer(question=question, shouldLie=shouldLie)
-
+        print(f"ResponderAnswer: {responderAnswer}")
         # send answer and question to  second player
         # receive answer
         guesserAnswer: bool = await self.toVerifyAnswerPlayer(question=question, answer=responderAnswer)
+        print(f"guesserAnswer: {responderAnswer}")
 
         # compare answers
         realResponderAnswer: bool = responderAnswer
@@ -152,8 +154,25 @@ class GameSession:
         if not await self.player2.sendMsg(ROUND_END_MSG):
             print("Error when sending round end com to player2")
 
+        temp = self.guesser
+        self.guesser = self.responder
+        self.responder = temp
+
         return
+    async def summarizeGame(self):
         
+        if (self.player1.coins > self.player2.coins):
+            await self.player1.sendMsg(PLAYER_WON_MSG)
+        
+        elif (self.player2.coins > self.player1.coins):
+            await self.player2.sendMsg(PLAYER_WON_MSG)
+        else:
+            await self.player1.sendMsg(GAME_TIE_MSG)
+            await self.player2.sendMsg(GAME_TIE_MSG)
+        
+
+
+
     async def runGame(self):
         print("Starting game...")
 
@@ -180,6 +199,10 @@ class GameSession:
             await self.startRound(i)
             print(f"Round {i}. END!")
         print("game done")
+
+        print("Getting game results...")
+        await self.summarizeGame()
+        print("Summarized game...")
 
         print("Stopping the game")
         await self.stop()

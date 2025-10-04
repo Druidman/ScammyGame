@@ -75,7 +75,7 @@ function handleMsg(msg){
         if (data["MSG_TYPE"] == Data.GAME_QUESTION_VERIFY_TYPE){
             document.getElementById("responderBox").style.display = "none"
             document.getElementById("guesserBox").style.display = "block"
-            document.getElementById("guesserQuestionBox").textContent = data["VALUE"]["QUESTION"] + "  " + data["VALUE"]["OPERATION"]
+            document.getElementById("guesserQuestionBox").textContent = data["VALUE"]["QUESTION"] + "  " + data["VALUE"]["ANSWER"]
         }
         if (data["MSG_TYPE"] == Data.ROUND_END_MSG_TYPE){
             document.getElementById("responderQuestionBox").textContent = ""

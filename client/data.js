@@ -113,3 +113,21 @@ export const GAME_QUESTION_VERIFY_REPLY = (val) => ({
     VALUE: val
 });
 
+export const PLAYER_WON_MSG_TYPE = "PLAYER_WON_MSG_TYPE"
+export const PLAYER_WON_MSG = {
+    MSG_TYPE: PLAYER_WON_MSG_TYPE,
+    VALUE: true
+}
+
+export const PLAYER_LOST_MSG_TYPE = "PLAYER_LOST_MSG_TYPE"
+export const PLAYER_LOST_MSG = {
+    MSG_TYPE: PLAYER_LOST_MSG_TYPE,
+    VALUE: true
+}
+
+export const GAME_TIE_MSG_TYPE = "GAME_TIE_MSG_TYPE"
+export const GAME_TIE_MSG = {
+    MSG_TYPE: GAME_TIE_MSG_TYPE,
+    VALUE: true
+}
+
