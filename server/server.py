@@ -31,18 +31,6 @@ class Server:
 
         await server.wait_closed()
         self.SHUTDOWN = True
-    async def run_game_session(self, game: GameSession):
-        if (not await game.checkIfPlayersReady()):
-            print("Players not ready")
-            await game.stop()
-            return
-        
-        print("Starting game...")
-        while not game.ended:
-            await game.update()
-            await asyncio.sleep(0)
-
-        await game.stop()
 
     async def player_connector(self):
         print(f"player connector running...")
@@ -59,10 +47,10 @@ class Server:
                 self.unassigned_clients.pop(1)
                 self.unassigned_clients.pop(0)
 
-                await game.player1.sendMsg(GAME_ASSIGNED)
-                await game.player2.sendMsg(GAME_ASSIGNED)
+                await game.player1.sendMsg(GAME_ASSIGNED_MSG(True))
+                await game.player2.sendMsg(GAME_ASSIGNED_MSG(True))
 
-                asyncio.create_task(self.run_game_session(game=game))
+                asyncio.create_task(game.runGame())
                 print("created new gameSession!")
             await asyncio.sleep(0)
 
@@ -73,7 +61,7 @@ class Server:
         self.clients.append(client)
         self.unassigned_clients.append(client)
         try:
-            await client.sendMsg(SUCCESFULLY_CONNECTED)
+            await client.sendMsg(CONNECTION_MSG(True))
             print("sent succesfull connection")
             
             async for msg in server:

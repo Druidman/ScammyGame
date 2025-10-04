@@ -1,6 +1,7 @@
 from .gameSession import GameSession
 import websockets, asyncio
 from typing import List
+import json
 
 class Client:
     def __init__(self, ws: websockets.WebSocketServerProtocol):
@@ -11,19 +12,27 @@ class Client:
 
         self.closed = False
 
-    async def sendMsg(self, msg: str) -> bool:
+    async def sendMsg(self, msg: dict) -> bool:
         if self.websocket.closed:
             return False
-        await self.websocket.send(msg)
+        await self.websocket.send(json.dumps(msg))
         return True
 
-    async def receiveMsg(self) -> str:
-        while len(self.messages) == 0: await asyncio.sleep(0)
-
+    async def receiveMsg(self, blocking=True) -> dict:
+        if (blocking):
+            while len(self.messages) == 0: await asyncio.sleep(0)
+        else:
+            if (len(self.messages) == 0):
+                return ""
+            
         message: str = self.messages[0]
 
         self.messages.pop(0)
-        return message
+
+        data = json.loads(message)
+        return data
+            
+            
 
     def assign_game(self, game: GameSession):
         self.gameSession = game

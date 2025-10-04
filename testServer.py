@@ -1,4 +1,4 @@
-import websockets, asyncio
+import websockets, asyncio, json
 
 from server.globals.communication import *
 
@@ -9,18 +9,20 @@ PORT = 8080
 
 messages = []
 
-async def getMsg() -> str:
+async def getMsg() -> dict:
     while (len(messages) == 0): await asyncio.sleep(0)
 
     msg: str = messages[0]
     messages.pop(0)
 
-    return msg
+    data = json.loads(msg)
+
+    return data
 
 async def testGame(websocket: websockets.WebSocketServerProtocol):
     response = await getMsg()
-    if (response != SUCCESFULLY_CONNECTED):
-        if (response == DISCONNECT):
+    if (response["MSG_TYPE"] != CONNECTION_MSG_TYPE or not response["VALUE"]):
+        if (response["MSG_TYPE"] == DISCONNECT_MSG_TYPE):
             print("server closed connection!")
             return
         
@@ -29,22 +31,14 @@ async def testGame(websocket: websockets.WebSocketServerProtocol):
 
 
     response = await getMsg()
-    if (response != GAME_ASSIGNED):
-        if (response == DISCONNECT):
+    if (response["MSG_TYPE"] != GAME_ASSIGNED_MSG_TYPE or not response["VALUE"]):
+        if (response["MSG_TYPE"] == DISCONNECT_MSG_TYPE):
             print("server closed connection!")
             return
         print("Client couldn't get game succesfully")
         exit()
     
     print("full client cycle done!")
-
-    response = await getMsg()
-    if (response != REQUEST_STATUS):
-        if (response == DISCONNECT):
-            print("server closed connection!")
-            return
-        print(f"Wrong game requests order {__file__}")
-        exit()
 
 
     print("closing connection")
