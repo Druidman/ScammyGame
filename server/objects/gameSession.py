@@ -160,15 +160,28 @@ class GameSession:
 
         return
     async def summarizeGame(self):
+        if not await self.player1.sendMsg(GAME_SUMMARY_MSG):
+            print("sending summary msg con wen wrong for player1")
+        if not await self.player2.sendMsg(GAME_SUMMARY_MSG):
+            print("sending summary msg con wen wrong for player2")
         
+
         if (self.player1.coins > self.player2.coins):
-            await self.player1.sendMsg(PLAYER_WON_MSG)
+            if not await self.player1.sendMsg(PLAYER_WON_MSG):
+                print("sending won msg con wen wrong for player1")
+            if not await self.player2.sendMsg(PLAYER_LOST_MSG):
+                print("sending lost msg con wen wrong for player2")
         
         elif (self.player2.coins > self.player1.coins):
-            await self.player2.sendMsg(PLAYER_WON_MSG)
+            if not await self.player2.sendMsg(PLAYER_WON_MSG):
+                print("sending won msg con wen wrong for player2")
+            if not await self.player1.sendMsg(PLAYER_LOST_MSG):
+                print("sending lost msg con wen wrong for player1")
         else:
-            await self.player1.sendMsg(GAME_TIE_MSG)
-            await self.player2.sendMsg(GAME_TIE_MSG)
+            if not await self.player1.sendMsg(GAME_TIE_MSG):
+                print("sending tie msg con wen wrong for player1")
+            if not await self.player2.sendMsg(GAME_TIE_MSG):
+                print("sending tie msg con wen wrong for player2")
         
 
 

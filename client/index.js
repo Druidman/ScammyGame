@@ -80,8 +80,28 @@ function handleMsg(msg){
         if (data["MSG_TYPE"] == Data.ROUND_END_MSG_TYPE){
             document.getElementById("responderQuestionBox").textContent = ""
             document.getElementById("guesserQuestionBox").textContent = ""
+            document.getElementById("responderBox").style.display = "none"
+            document.getElementById("guesserBox").style.display = "none"
+            
+        }
+        if (data["MSG_TYPE"] == Data.GAME_SUMMARY_MSG_TYPE){
+            goToEndScreen()
         }
 
+    }
+    else if (currentScreen == Data.GAME_END_SCREEN){
+        if (data["MSG_TYPE"] == Data.PLAYER_WON_MSG_TYPE){
+            console.log("WON")
+            document.getElementById("endScreen").textContent += "YOU WON!"
+        }
+        if (data["MSG_TYPE"] == Data.GAME_TIE_MSG_TYPE){
+            console.log("tie")
+            document.getElementById("endScreen").textContent += "TIE!"
+        }
+        if (data["MSG_TYPE"] == Data.PLAYER_LOST_MSG_TYPE){
+            console.log("lost")
+            document.getElementById("endScreen").textContent += "YOU LOST!"
+        }
     }
 }
 
@@ -91,6 +111,7 @@ function goToGameStartScreen(){
     document.getElementById("gameWaiter").style.display = "none"
     document.getElementById("chatBox").style.display = "none"
     document.getElementById("gameBox").style.display = "none"
+    document.getElementById("endScreen").style.display = "none"
 
     currentScreen = Data.START_SCREEN
 }
@@ -100,6 +121,7 @@ function goToGameWaiterScreen(){
 
     document.getElementById("chatBox").style.display = "none"
     document.getElementById("gameBox").style.display = "none"
+    document.getElementById("endScreen").style.display = "none"
     currentScreen = Data.GAME_WAITER_SCREEN
 }
 function goToGameChatScreen(){
@@ -108,6 +130,7 @@ function goToGameChatScreen(){
 
     document.getElementById("gameWaiter").style.display = "none"
     document.getElementById("gameBox").style.display = "none"
+    document.getElementById("endScreen").style.display = "none"
 
     currentScreen = Data.CHAT_BOX_SCREEN
 }
@@ -117,8 +140,21 @@ function goToGameScreen(){
 
     document.getElementById("gameWaiter").style.display = "none"
     document.getElementById("chatBox").style.display = "none"
+    document.getElementById("endScreen").style.display = "none"
 
     currentScreen = Data.GAME_BOX_SCREEN
+}
+
+function goToEndScreen(){
+    console.log("switch")
+    document.getElementById("endScreen").style.display = "block"
+    
+
+    document.getElementById("gameWaiter").style.display = "none"
+    document.getElementById("chatBox").style.display = "none"
+    document.getElementById("gameBox").style.display = "none"
+
+    currentScreen = Data.GAME_END_SCREEN
 }
 
 

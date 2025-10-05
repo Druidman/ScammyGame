@@ -3,6 +3,7 @@ export const START_SCREEN = "START_SCREEN"
 export const GAME_WAITER_SCREEN = "GAME_WAITER_SCREEN"
 export const CHAT_BOX_SCREEN = "CHAT_BOX_SCREEN"
 export const GAME_BOX_SCREEN = "GAME_BOX_SCREEN"
+export const GAME_END_SCREEN = "GAME_END_SCREEN"
 
 
 export const CONNECTION_MSG_TYPE = "CONNECTION";
@@ -131,3 +132,8 @@ export const GAME_TIE_MSG = {
     VALUE: true
 }
 
+export const GAME_SUMMARY_MSG_TYPE = "GAME_SUMMARY_MSG_TYPE"
+export const GAME_SUMMARY_MSG = {
+    MSG_TYPE: GAME_SUMMARY_MSG_TYPE,
+    VALUE: true
+}
