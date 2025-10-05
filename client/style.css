@@ -1,0 +1,347 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: "VT323", monospace;
+    font-weight: 100;
+}
+
+button {
+    all: unset;
+    cursor: pointer;
+}
+input {
+    all: unset;
+    cursor: text;
+}
+
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #E0E1DD;
+}
+
+.mainSection {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #E0E1DD;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.waitingMsgBox {
+    width: 50%;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: 5px dashed #778DA9;
+    border-radius: 20px;
+
+}
+
+.infoDiv {
+    width: 50%;
+    height: 50%;
+    background-color: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    border: 2px solid #778DA9;
+    border-radius: 10px;
+}
+
+#welcomeScreen>.infoDiv>h1 {
+    width: 50%;
+
+    text-align: center;
+    color: #0D1B2A;
+    letter-spacing: 3px;
+    font-size: 5vw;
+}
+
+.infoDiv>div {
+    width: 90%;
+    height: 40%;
+
+
+}
+
+.mainButton {
+    width: 100%;
+    height: 100%;
+    background-color: #778DA9;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 5vw;
+    letter-spacing: 5px;
+    transition: 300ms;
+}
+
+.mainButton:hover {
+    background-color: #415A77;
+}
+
+
+#gameReadyScreen>.infoDiv>h1 {
+    width: 50%;
+
+    text-align: center;
+    color: #0D1B2A;
+    letter-spacing: 3px;
+    font-size: 5vw;
+}
+
+#gameChatScreen {
+    flex-direction: column;
+}
+#gameChatScreen > div{
+    width: 80%;
+    height: 80%;
+    padding: 20px;
+    
+    border: 3px solid #778DA9;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+#chatBox {
+    width: 100%;
+    height: 90%;
+    background-color: inherit;
+    border: 2px solid #0D1B2A;
+    border-radius: 5px;
+    padding: 10px;
+    overflow-y: scroll;
+}
+#chatBox .chatMsgBox {
+    width: 100%;
+    height: 5%;
+    display: flex;
+    align-items: center;
+
+    padding: 5px;
+}
+#chatBox .chatMsg {
+    height: 100%;
+    color: white;
+    background-color: #415A77;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+   
+}
+
+.chatMsgBoxLeft {
+    justify-content: start;
+}
+.chatMsgBoxRight {
+    justify-content: end;
+}
+
+#gameChatInputWrapper {
+    width: 100%;
+    height: 3%;
+    border: 2px solid #0D1B2A;
+    border-radius: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+#chatInput{
+    width: 100%;
+    height: 100%;
+}
+
+
+/* GAME SCREEN */
+#gameScreen{
+    align-items: center;
+    justify-content: center;
+}
+#gameScreen > div{
+    width: 90%;
+    height: 90%;
+    
+    padding: 20px;
+    border: 3px solid #778DA9;
+    border-radius: 10px;
+}
+
+#gameStats {
+    width: 100%;
+    height: 5%;
+   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 3px solid #778DA9;
+
+}
+#coinsBox {
+    display: flex;
+    justify-content: center;
+    width: fit-content;
+    height: fit-content;
+    font-size: 1.5em;
+}
+
+#gameBox {
+    padding: 10px;
+    height: 90%;
+    width: 100%;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+
+}
+
+#gameRoleBox {
+    width: fit-content;
+    height: 10%;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: clamp(3vmin, 4vmin, 5vmin);
+    padding: 10px;
+    border: 3px solid #778DA9;
+    border-radius: 10px;
+}
+#questionBox {
+    background-color: #415A77;
+    width: 70%;
+    height: 80%;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    border-radius: 20px;
+}
+#questionMsg {
+    padding: 10px;
+    width: 100%;
+    height: 60%;
+    
+    font-size: clamp(3vmin, 4vmin, 5vmin);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 3px solid #0D1B2A;
+}
+#questionPromptBox {
+    padding: 10px;
+  
+    height: 10%;
+    width: 100%;
+    font-size: clamp(3vmin, 4vmin, 5vmin);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 3px solid #0D1B2A;
+}
+#answerButtonsBox {
+    
+
+    height: 20%;
+    width: 50%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+}
+.questionAnswerButton {
+    width: 45%;
+    height: 100%;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: clamp(3vmin, 4vmin, 5vmin);
+    
+}
+.trueAns {
+    border: 4px solid #0A5C36;
+    border-radius: 5px;
+}
+.falseAns {
+    border: 4px solid #B70000;
+    border-radius: 5px;
+}
+
+
+
+
+#gameSummaryScreen{
+    align-items: center;
+    justify-content: center;
+}
+#gameSummaryScreen > div{
+    width: 90%;
+    height: 90%;
+    
+    padding: 20px;
+    border: 3px solid #778DA9;
+    border-radius: 10px;
+}
+
+.endGameSummaryScreen {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+#prizes {
+    border: 3px solid #778DA9;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    height: 50%;
+}
+
+#gameMakerNameOnSlackPrizeButton{
+    background-color: blue;
+    width: 100%;
+    height: 50%;
+}
+
+#gameMakerGpuPrizeButton{
+    background-color: red;
+    width: 100%;
+    height: 50%;
+}
+
+
+#winCoinTable {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    height: fit-content;
+    font-size: 1.5em;
+}

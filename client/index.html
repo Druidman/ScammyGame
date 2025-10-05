@@ -3,38 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyGame</title>
+    <title>Scammy</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 </head>
 <body>
+    <section id="welcomeScreen" class="mainSection">
+        <div class="infoDiv">
+            <h1>Scammy</h1>
+            <div>
+                <button id="playButton" class="mainButton">PLAY</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="gameQueueScreen" class="mainSection" style="display: none;">
+        <div id="conectionWaiter" style="display: none;" class="waitingMsgBox">
+            Connecting...
+        </div>
+        <div id="lobbyWaiter" style="display: none;" class="waitingMsgBox">
+            Waiting for players...
+        </div>
+    </section>
+
+    <section id="gameReadyScreen" class="mainSection" style="display: none;">
+        <div class="infoDiv" id="gameReadyInfoDiv">
+            
+            <h1>Get Ready!</h1>
+            <div>
+                <button id="readyButton" class="mainButton" style="display: none;">I'm Ready!</button>
+            </div>
+        </div>
+        <div id="gameReadyWaiter" style="display: none;" class="waitingMsgBox">
+            Waiting for opponent to get ready...
+        </div>
+    </section>
     
-    <div id="gameWaiter" class="mainBox" >
-        <p id="connectingWaiter">Connecting...</p>
-        <p id="gameAssignementWaiter">Game assigned...</p>
-    </div>
-
-    <div id="chatBox" class="mainBox" style="display: none;">
-        <div id="messagesFromPlayer2"></div>
-        <input id="chatInput" type="text" placeholder="Type here...">
-    </div>
-
-    <div id="gameBox" class="mainBox" style="display: none;">
-        <div id="guesserBox" style="display: none;">
-            <p id="guesserQuestionBox"></p>
-            <button id="guesserTruthButton">True</button>
-            <button id="guesserFalseButton">False</button>
+    <section id="gameChatScreen" class="mainSection" style="display: none;">
+        <div>
+            <div id="chatBox">
+                
+            </div>
+            <div id="gameChatInputWrapper">
+                <input type="text" id="chatInput" placeholder="Get to know the person so that then you would be a better liar or guesser...">
+            </div>
         </div>
-        <div id="responderBox" style="display: none;">
-            <p id="responderQuestionBox"></p>
-            <button id="responderTruthButton">True</button>
-            <button id="responderFalseButton">False</button>
-        </div>
-
-    </div>
-
-    <div id="endScreen">
         
-    </div>
+    </section>
+    
+    <section id="gameScreen" class="mainSection" style="display: none;">
+        <div>
+            <div id="gameStats">
+                <div id="coinsBox">
+                    <p>🪙:</p>
+                    <p id="coins"></p>
+                </div>
+            </div>
+            <div id="gameBox">
+                <div id="gameRoleBox">
+                    <p>Role: </p>
+                    <p id="role"> NONE</p>
+                </div>
+                <div id="questionBox">
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </section>
+    
+    <section id="gameSummaryScreen" class="mainSection" style="display: none;">
+        <div>
+            <div id="winScreen" class="endGameSummaryScreen" style="display: none;">
+                <h1>😎! YOU WON !😎</h1>
+                <h2>Now you can spend your coins on prizes!</h2>
+                <div id="winCoinTable">
+                    <p>🪙:</p>
+                    <p id="winCoins"></p>
+                </div>
+                
+                <div id="prizes">
+                    
+                    <button id="gameMakerNameOnSlackPrizeButton">MY NAME ON SLACK 15</button>
+                    <button id="gameMakerGpuPrizeButton" >MY GPU 15</button>
+                </div>
+            </div>
+            <div id="lostScreen" class="endGameSummaryScreen" style="display: none;">
+                <h1>😭! YOU LOST !😭</h1>
+                <h2>Try again for prizes!</h2>
+            </div>
+            <div id="tieScreen" class="endGameSummaryScreen" style="display: none;">
+                <h1>🤔! It's a TIE !🤔</h1>
+                <h2>No prizes for a tie!</h2>
+            </div>
+        </div>
+    </section>
+    
+    <section id="thankYouScreen" class="mainSection" style="display: none;">
+        <div>
+            <h2>Thank You!</h2>
+            <p>Thanks for playing Scammy!</p>
+        </div>
+    </section>
+    
     <script src="index.js" type="module"></script>
 </body>
 </html>
