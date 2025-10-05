@@ -70,6 +70,10 @@ class Server:
             print("sent succesfull connection")
             
             async for msg in server:
+                if (json.loads(msg)["MSG_TYPE"] == PING_MSG_TYPE):
+                  
+                    continue
+                
                 if (client.gameSession):
                     if (json.loads(msg)["MSG_TYPE"] == GET_CURRENT_COINS_MSG_TYPE):
                         await client.sendMsg(CURRENT_COINS_MSG(client.coins))

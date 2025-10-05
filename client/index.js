@@ -47,6 +47,9 @@ async function connectToServer() {
 
     socket.addEventListener("open", () => {
         console.log("Connected");
+        setInterval(()=>{
+            sendMsgToServer(Data.PING_MSG)
+        }, 500)
 
     });
 

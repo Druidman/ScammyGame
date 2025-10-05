@@ -196,3 +196,8 @@ export const GET_CURRENT_COINS_MSG = {
     MSG_TYPE: GET_CURRENT_COINS_MSG_TYPE,
     VALUE: true
 }
+
+export const PING_MSG_TYPE = "PING_MSG_TYPE"
+export const PING_MSG = {
+    MSG_TYPE: PING_MSG_TYPE
+}
