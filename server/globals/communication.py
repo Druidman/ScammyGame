@@ -86,7 +86,7 @@ GAME_QUESTION_MSG = lambda question, operation : {
     "MSG_TYPE": GAME_QUESTION_MSG_TYPE,
     "VALUE": {
         "QUESTION": question,
-        "OPERATION": operation # lie or truth
+        "OPERATION": "truth" if operation else "lie" # lie or truth
     }
 }
 
@@ -130,9 +130,16 @@ GAME_TIE_MSG = {
 }
 
 GAME_SUMMARY_MSG_TYPE = "GAME_SUMMARY_MSG_TYPE"
-GAME_SUMMARY_MSG = {
+GAME_SUMMARY_MSG = lambda gameResult, creatorName, creatorGpu, coins: {
     "MSG_TYPE": GAME_SUMMARY_MSG_TYPE,
-    "VALUE": True
+    "VALUE": {
+        "GAME_RESULT": gameResult,
+        "COINS": coins,
+        "PRIZES": {
+            "CREATOR_NAME": creatorName,
+            "CREATOR_GPU": creatorGpu
+        }
+    }
 }
 
 STARTING_GAME_ROUNDS_MSG_TYPE = "STARTING_GAME_ROUNDS_MSG_TYPE"
@@ -147,3 +154,46 @@ ENDING_GAME_ROUNDS_MSG = {
     "VALUE": True
 }
 
+GAME_ROLE_MSG_TYPE = "GAME_ROLE_MSG_TYPE"
+GAME_ROLE_MSG = lambda val : {
+    "MSG_TYPE": GAME_ROLE_MSG_TYPE,
+    "VALUE": val
+}
+
+GAME_RESPONDER_ANSWERING_TYPE = "GAME_RESPONDER_ANSWERING_TYPE"
+GAME_RESPONDER_ANSWERING = {
+    "MSG_TYPE": GAME_RESPONDER_ANSWERING_TYPE,
+    "VALUE": True
+}
+
+GAME_GUESSER_ANSWERING_TYPE = "GAME_GUESSER_ANSWERING_TYPE"
+GAME_GUESSER_ANSWERING = {
+    "MSG_TYPE": GAME_GUESSER_ANSWERING_TYPE,
+    "VALUE": True
+}
+
+GAME_GUESSER = "GAME_GUESSER"
+GAME_RESPONDER = "GAME_RESPONDER"
+
+
+WIN = "WIN"
+LOST = "LOST"
+TIE = "TIE"
+
+
+CREATOR_NAME = "BOBER on hackclub slack"
+CREATOR_GPU = "AMD RX 570 4gb"
+
+
+
+CURRENT_COINS_MSG_TYPE = "CURRENT_COINS_MSG_TYPE"
+CURRENT_COINS_MSG = lambda x : {
+    "MSG_TYPE": CURRENT_COINS_MSG_TYPE,
+    "VALUE": x
+}
+
+GET_CURRENT_COINS_MSG_TYPE = "GET_CURRENT_COINS_MSG_TYPE"
+GET_CURRENT_COINS_MSG = {
+    "MSG_TYPE": GET_CURRENT_COINS_MSG_TYPE,
+    "VALUE": True
+}

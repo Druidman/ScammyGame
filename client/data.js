@@ -137,10 +137,14 @@ export const GAME_TIE_MSG = {
 }
 
 export const GAME_SUMMARY_MSG_TYPE = "GAME_SUMMARY_MSG_TYPE"
-export const GAME_SUMMARY_MSG = {
+export const GAME_SUMMARY_MSG = (gameResult) => ({
     MSG_TYPE: GAME_SUMMARY_MSG_TYPE,
-    VALUE: true
-}
+    VALUE: {
+        GAME_RESULT: gameResult,
+        PRIZES: "HAHHA you thought you might find some there (well congrats I will give you name on hackclub slack BOBER (msg me))"
+    }
+})
+
 
 
 export const STARTING_GAME_ROUNDS_MSG_TYPE = "STARTING_GAME_ROUNDS_MSG_TYPE"
@@ -152,5 +156,43 @@ export const STARTING_GAME_ROUNDS_MSG = {
 export const ENDING_GAME_ROUNDS_MSG_TYPE = "ENDING_GAME_ROUNDS_MSG_TYPE"
 export const ENDING_GAME_ROUNDS_MSG = {
     MSG_TYPE: ENDING_GAME_ROUNDS_MSG_TYPE,
+    VALUE: true
+}
+
+export const GAME_ROLE_MSG_TYPE = "GAME_ROLE_MSG_TYPE"
+export const GAME_ROLE_MSG = (val) => ({
+    MSG_TYPE: GAME_ROLE_MSG_TYPE,
+    VALUE: val
+})
+
+export const GAME_RESPONDER_ANSWERING_TYPE = "GAME_RESPONDER_ANSWERING_TYPE"
+export const GAME_RESPONDER_ANSWERING = {
+    MSG_TYPE: GAME_RESPONDER_ANSWERING_TYPE,
+    VALUE: true
+}
+
+export const GAME_GUESSER_ANSWERING_TYPE = "GAME_GUESSER_ANSWERING_TYPE"
+export const GAME_GUESSER_ANSWERING = {
+    MSG_TYPE: GAME_GUESSER_ANSWERING_TYPE,
+    VALUE: true
+}
+
+export const GAME_GUESSER = "GAME_GUESSER"
+export const GAME_RESPONDER = "GAME_RESPONDER"
+
+export const WIN = "WIN"
+export const LOST = "LOST"
+export const TIE = "TIE"
+
+
+export const CURRENT_COINS_MSG_TYPE = "CURRENT_COINS_MSG_TYPE"
+export const CURRENT_COINS_MSG = (x) => ({
+    MSG_TYPE: CURRENT_COINS_MSG_TYPE,
+    VALUE: x
+})
+
+export const GET_CURRENT_COINS_MSG_TYPE = "GET_CURRENT_COINS_MSG_TYPE"
+export const GET_CURRENT_COINS_MSG = {
+    MSG_TYPE: GET_CURRENT_COINS_MSG_TYPE,
     VALUE: true
 }

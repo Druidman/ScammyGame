@@ -45,7 +45,7 @@
                 
             </div>
             <div id="gameChatInputWrapper">
-                <input type="text" id="chatInput" placeholder="Type smth to your opponent...">
+                <input type="text" id="chatInput" placeholder="Get to know the person so that then you would be a better liar or guesser...">
             </div>
         </div>
         
@@ -53,15 +53,50 @@
     
     <section id="gameScreen" class="mainSection" style="display: none;">
         <div>
-            <h2>Game On!</h2>
-            <p>Make your moves and play the game.</p>
+            <div id="gameStats">
+                <div id="coinsBox">
+                    <p>🪙:</p>
+                    <p id="coins"></p>
+                </div>
+            </div>
+            <div id="gameBox">
+                <div id="gameRoleBox">
+                    <p>Role: </p>
+                    <p id="role"> NONE</p>
+                </div>
+                <div id="questionBox">
+                    
+                </div>
+                
+            </div>
         </div>
+        
     </section>
     
     <section id="gameSummaryScreen" class="mainSection" style="display: none;">
         <div>
-            <h2>Game Summary</h2>
-            <p>Here are the results of the game.</p>
+            <div id="winScreen" class="endGameSummaryScreen" style="display: none;">
+                <h1>😎! YOU WON !😎</h1>
+                <h2>Now you can spend your coins on prizes!</h2>
+                <div id="winCoinTable">
+                    <p>🪙:</p>
+                    <p id="winCoins"></p>
+                </div>
+                
+                <div id="prizes">
+                    
+                    <button id="gameMakerNameOnSlackPrizeButton">MY NAME ON SLACK 15</button>
+                    <button id="gameMakerGpuPrizeButton" >MY GPU 15</button>
+                </div>
+            </div>
+            <div id="lostScreen" class="endGameSummaryScreen" style="display: none;">
+                <h1>😭! YOU LOST !😭</h1>
+                <h2>Try again for prizes!</h2>
+            </div>
+            <div id="tieScreen" class="endGameSummaryScreen" style="display: none;">
+                <h1>🤔! It's a TIE !🤔</h1>
+                <h2>No prizes for a tie!</h2>
+            </div>
         </div>
     </section>
     

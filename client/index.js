@@ -1,10 +1,19 @@
 
 import * as Data from "./data.js"
 import * as Destinations from "./destinations.js"
+import { WAITING_FOR } from "./utils.js"
+
+var prizes = undefined
 
 var socket = undefined
+var gameEnded = false
+
+var coins = 0
 
 export var currentScreen = Data.WELCOME_SCREEN
+
+
+
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -79,11 +88,123 @@ function addChatMsg(left, msg) {
     document.getElementById("chatBox").appendChild(msgBox)
 }
 
+function generateAnswerButtonBox(who){
+    // <div id="answerButtonsBox">
+    //     <button class="questionAnswerButton trueAns">True</button>
+    //     <button class="questionAnswerButton falseAns">False</button>
+    // </div>
+
+    let answerButtonsBox = document.createElement("div")
+    answerButtonsBox.id = "answerButtonsBox"
+    
+    let trueButton = document.createElement("button")
+    trueButton.classList.add("questionAnswerButton")
+    trueButton.classList.add("trueAns")
+    
+    
+
+    let falseButton = document.createElement("button")
+    falseButton.classList.add("questionAnswerButton")
+    falseButton.classList.add("falseAns")
+    
+
+    if (who == Data.GAME_RESPONDER)
+    {
+        trueButton.textContent = "Yes"
+        falseButton.textContent = "No"
+    }
+    else if (who == Data.GAME_GUESSER){
+        trueButton.textContent = "Tells truth"
+        falseButton.textContent = "Lies"
+    }
+
+
+
+    answerButtonsBox.appendChild(trueButton)
+    answerButtonsBox.appendChild(falseButton)
+
+    return answerButtonsBox
+
+}
+
+function generateResponderQuestionBox(data){
+    // <div id="questionMsg">How old are you?</div>
+    // <div id="questionPromptBox">Tell the truth</div>
+    // <div id="answerButtonsBox">
+    //     <button class="questionAnswerButton trueAns">True</button>
+    //     <button class="questionAnswerButton falseAns">False</button>
+    // </div>
+
+    let questionMsg = document.createElement("div")
+    questionMsg.id = "questionMsg"
+    questionMsg.textContent = data["QUESTION"]
+
+    let questionPromptBox = document.createElement("div")
+    questionPromptBox.id = "questionPromptBox"
+    questionPromptBox.textContent = "( Tell the: " + data["OPERATION"] + " )"
+
+
+    let answerButtonsBox = generateAnswerButtonBox(Data.GAME_RESPONDER)
+
+    answerButtonsBox.getElementsByClassName("trueAns")[0].addEventListener("click", ()=>{
+        sendMsgToServer(Data.GAME_QUESTION_REPLY(true))
+    })
+    answerButtonsBox.getElementsByClassName("falseAns")[0].addEventListener("click", ()=>{
+        sendMsgToServer(Data.GAME_QUESTION_REPLY(false))
+    })
+
+    let element = document.getElementById("questionBox")
+    element.innerHTML = ""
+    element.appendChild(questionMsg)
+    element.appendChild(questionPromptBox)
+    element.appendChild(answerButtonsBox)
+
+    console.log("DATA_RECEIVED: " + data["OPERATION"])
+}
+
+function generateGuesserQuestionBox(data){
+    // <div id="questionMsg">How old are you?</div>
+    // <div id="questionPromptBox">Opponent told the truth</div>
+    // <div id="answerButtonsBox">
+    //     <button class="questionAnswerButton trueAns">True</button>
+    //     <button class="questionAnswerButton falseAns">False</button>
+    // </div>
+
+    let questionMsg = document.createElement("div")
+    questionMsg.id = "questionMsg"
+    questionMsg.textContent = data["QUESTION"]
+
+    let questionPromptBox = document.createElement("div")
+    questionPromptBox.id = "questionPromptBox"
+    let answer = (data["ANSWER"]) ? "Yes" : "No"
+  
+    questionPromptBox.textContent = "( Opponent's answer: " + answer + " )"
+
+
+    let answerButtonsBox = generateAnswerButtonBox(Data.GAME_GUESSER)
+    answerButtonsBox.getElementsByClassName("trueAns")[0].addEventListener("click", ()=>{
+        console.log("clicked tells truth button")
+        sendMsgToServer(Data.GAME_QUESTION_VERIFY_REPLY(true))
+    })
+    answerButtonsBox.getElementsByClassName("falseAns")[0].addEventListener("click", ()=>{
+        console.log("clicked false button")
+        sendMsgToServer(Data.GAME_QUESTION_VERIFY_REPLY(false))
+    })
+
+    let element = document.getElementById("questionBox")
+    element.innerHTML = ""
+    element.appendChild(questionMsg)
+    element.appendChild(questionPromptBox)
+    element.appendChild(answerButtonsBox)
+
+    console.log("DATA_RECEIVED: " + data["ANSWER"])
+}
+
 
 
 function handleMsg(msg) {
     let data = JSON.parse(msg)
-    if (data["MSG_TYPE"] == Data.DISCONNECT_MSG_TYPE) {
+    if (data["MSG_TYPE"] == Data.DISCONNECT_MSG_TYPE && !gameEnded) {
         console.log("Server disconnected")
         location.reload()
         return
@@ -143,19 +264,96 @@ function gameChatScreenMsgHandler(data) {
 }
 function gameScreenMsgHandler(data) {
     let msgType = data["MSG_TYPE"];
+    if (msgType == Data.STARTING_GAME_ROUNDS_MSG_TYPE){
+
+    }
+    if (msgType == Data.CURRENT_COINS_MSG_TYPE){
+        document.getElementById("coins").textContent = data["VALUE"]
+        console.log("received coins request")
+    }
+    if (msgType == Data.ROUND_START_MSG_TYPE){
+        document.getElementById("role").textContent = ""
+        document.getElementById("questionBox").textContent = ""
+        sendMsgToServer(Data.GET_CURRENT_COINS_MSG)
+        console.log("sent coins request")
+    }
+
+    if (msgType == Data.GAME_ROLE_MSG_TYPE){
+        document.getElementById("role").textContent = data["VALUE"]
+    }
+
+    if (msgType == Data.GAME_RESPONDER_ANSWERING_TYPE){
+        document.getElementById("questionBox").textContent = WAITING_FOR(Data.GAME_RESPONDER)
+    }
+    if (msgType == Data.GAME_GUESSER_ANSWERING_TYPE){
+        document.getElementById("questionBox").textContent = WAITING_FOR(Data.GAME_GUESSER)
+    }
+
+    if (msgType == Data.GAME_QUESTION_MSG_TYPE){
+        generateResponderQuestionBox(data["VALUE"])
+    }
+    if (msgType == Data.GAME_QUESTION_VERIFY_TYPE){
+        generateGuesserQuestionBox(data["VALUE"])
+    }
+
+    if (msgType == Data.ROUND_END_MSG_TYPE){
+        document.getElementById("role").textContent = ""
+        document.getElementById("questionBox").textContent = ""
+        sendMsgToServer(Data.GET_CURRENT_COINS_MSG)
+        console.log("sent coins request")
+
+    }
+    
+
     if (msgType == Data.ENDING_GAME_ROUNDS_MSG_TYPE) {
         Destinations.goToGameSummaryScreen()
     }
 
 }
 function gameSummaryMsgHandler(data) {
-
+    
     let msgType = data["MSG_TYPE"];
+    
     if (msgType == Data.GAME_SUMMARY_MSG_TYPE) {
-        console.log("Game summary received");
-
+        gameEnded = true
+        let summaryData = data["VALUE"]
+        
+        if (summaryData["GAME_RESULT"] == Data.WIN){
+            document.getElementById("winScreen").style.display = "flex"
+            coins = summaryData["COINS"]
+            prizes = summaryData["PRIZES"]
+            document.getElementById("winCoins").textContent = coins
+        }
+        else if (summaryData["GAME_RESULT"] == Data.LOST){
+            document.getElementById("lostScreen").style.display = "flex"
+        }
+        else if (summaryData["GAME_RESULT"] == Data.TIE){
+            document.getElementById("tieScreen").style.display = "flex"
+        }
     }
+   
 }
+
+document.getElementById("gameMakerNameOnSlackPrizeButton").addEventListener("click", ()=>{
+    console.log("Name on slack clicked")
+    if (coins < 15){
+        return
+    }
+    coins -= 15
+    document.getElementById("winCoins").textContent = coins
+    alert(prizes["CREATOR_NAME"])
+})
+
+document.getElementById("gameMakerGpuPrizeButton").addEventListener("click", ()=>{
+    console.log("gpu clicked")
+    if (coins < 15){
+        return
+    }
+    coins -= 15
+    document.getElementById("winCoins").textContent = coins
+    alert(prizes["CREATOR_GPU"])
+})
+
 
 
 

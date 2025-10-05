@@ -14,6 +14,8 @@ class Client:
 
         self.closed = False
 
+        self.coins = 0
+
     async def sendMsg(self, msg: dict) -> bool:
 
         if self.websocket.closed:

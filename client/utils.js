@@ -17,4 +17,6 @@ export function animateQueueWaitUntilNotVisible(id){
     }, 200)
 }
 
+export const WAITING_FOR = (who) => {return `Waiting for ${who} to answer...`}
+
 

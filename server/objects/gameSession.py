@@ -13,7 +13,8 @@ class GameSession:
 
 
         self.CHATTING_PHASE_TIME = 30 #s\
-        self.COINS_PER_ROUND = 50
+        self.COINS_PER_ROUND = 5
+        self.COINS_AT_START = 5
 
         self.guesser = self.player1
         self.responder = self.player2
@@ -86,15 +87,18 @@ class GameSession:
             print("Error when sending chatting phase end com to player2")
 
     async def giveCoins(self): 
-        self.player1.coins = self.COINS_PER_ROUND
-        self.player2.coins = self.COINS_PER_ROUND
+        self.player1.coins = self.COINS_AT_START
+        self.player2.coins = self.COINS_AT_START
 
-    async def askQuestionToPlayer(self, question: str, shouldLie: bool) -> bool:
+    async def askQuestionToPlayer(self, question: str, shouldTellTheTruth: bool) -> bool:
         
 
         #ask the question
-        if not await self.responder.sendMsg(GAME_QUESTION_MSG(question, shouldLie)):
+        if not await self.responder.sendMsg(GAME_QUESTION_MSG(question, shouldTellTheTruth)):
             print("Error when sending question com to responder")
+        
+        if not await self.guesser.sendMsg(GAME_RESPONDER_ANSWERING):
+            print("Error when sending GAME_RESPONDER_ANSWERING com to guesser")
         
         #get answer
         msg = await self.responder.receiveMsg()
@@ -109,6 +113,8 @@ class GameSession:
      
         if not await self.guesser.sendMsg(GAME_QUESTION_VERIFY(question, answer)):
             print("Error when sending question verify com to guesser")
+        if not await self.responder.sendMsg(GAME_GUESSER_ANSWERING):
+            print("Error when sending GAME_GUESSER_ANSWERING com to responder")
         
         #get answer
         msg = await self.guesser.receiveMsg()
@@ -126,13 +132,21 @@ class GameSession:
         if not await self.player2.sendMsg(ROUND_START_MSG):
             print("Error when sending round start com to player2")
 
+        print("Sent round start")
+        if not await self.responder.sendMsg(GAME_ROLE_MSG(GAME_RESPONDER)):
+            print("Error when sending role com to player1")
+        if not await self.guesser.sendMsg(GAME_ROLE_MSG(GAME_GUESSER)):
+            print("Error when sending role com to player2")
+        print("Sent gamerole")
         # send question to player
         # receive answer
         questionInd: int = random.randint(0,len(self.available_questions)-1)
         question: str = self.available_questions[questionInd]
-        shouldLie: bool = bool(random.randint(0,1))
+        shouldTellTheTruth: bool = bool(random.randint(0,1))
 
-        responderAnswer: bool = await self.askQuestionToPlayer(question=question, shouldLie=shouldLie)
+        print(f"shouldTellTheTruth?: {shouldTellTheTruth}")
+
+        responderAnswer: bool = await self.askQuestionToPlayer(question=question, shouldTellTheTruth=shouldTellTheTruth)
         print(f"ResponderAnswer: {responderAnswer}")
         # send answer and question to  second player
         # receive answer
@@ -140,18 +154,15 @@ class GameSession:
         print(f"guesserAnswer: {responderAnswer}")
 
         # compare answers
-        realResponderAnswer: bool = responderAnswer
-        if (shouldLie):
-            # If user was prompted to lie then his actual answer would have been negation of real one
-            realResponderAnswer = not responderAnswer
+        
 
-        # if guesserAnswer is true then it means that we think that responders answer is true
-        if (guesserAnswer == realResponderAnswer):
+        
+        if (guesserAnswer == shouldTellTheTruth):
             # guessed!
-            self.guesser.coins += 1
+            self.guesser.coins += self.COINS_PER_ROUND
         else:
             # not guessed !
-            self.responder.coins += 1
+            self.responder.coins += self.COINS_PER_ROUND
 
         # send round end
         if not await self.player1.sendMsg(ROUND_END_MSG):
@@ -164,29 +175,24 @@ class GameSession:
         self.responder = temp
 
         return
+    
     async def summarizeGame(self):
-        if not await self.player1.sendMsg(GAME_SUMMARY_MSG):
-            print("sending summary msg con wen wrong for player1")
-        if not await self.player2.sendMsg(GAME_SUMMARY_MSG):
-            print("sending summary msg con wen wrong for player2")
-        
-
         if (self.player1.coins > self.player2.coins):
-            if not await self.player1.sendMsg(PLAYER_WON_MSG):
-                print("sending won msg con wen wrong for player1")
-            if not await self.player2.sendMsg(PLAYER_LOST_MSG):
-                print("sending lost msg con wen wrong for player2")
+            if not await self.player1.sendMsg(GAME_SUMMARY_MSG(WIN,CREATOR_NAME,CREATOR_GPU, self.player1.coins)):
+                print("sending summary msg con wen wrong for player1")
+            if not await self.player2.sendMsg(GAME_SUMMARY_MSG(LOST,"","",self.player2.coins)):
+                print("sending summary msg con wen wrong for player2")
         
         elif (self.player2.coins > self.player1.coins):
-            if not await self.player2.sendMsg(PLAYER_WON_MSG):
-                print("sending won msg con wen wrong for player2")
-            if not await self.player1.sendMsg(PLAYER_LOST_MSG):
-                print("sending lost msg con wen wrong for player1")
+            if not await self.player1.sendMsg(GAME_SUMMARY_MSG(LOST,"","",self.player1.coins)):
+                print("sending summary msg con wen wrong for player1")
+            if not await self.player2.sendMsg(GAME_SUMMARY_MSG(WIN,CREATOR_NAME,CREATOR_GPU,self.player2.coins)):
+                print("sending summary msg con wen wrong for player2")
         else:
-            if not await self.player1.sendMsg(GAME_TIE_MSG):
-                print("sending tie msg con wen wrong for player1")
-            if not await self.player2.sendMsg(GAME_TIE_MSG):
-                print("sending tie msg con wen wrong for player2")
+            if not await self.player1.sendMsg(GAME_SUMMARY_MSG(TIE,"","",self.player1.coins)):
+                print("sending summary msg con wen wrong for player1")
+            if not await self.player2.sendMsg(GAME_SUMMARY_MSG(TIE,"","",self.player2.coins)):
+                print("sending summary msg con wen wrong for player2")
         
     async def startRounds(self):
         await self.player1.sendMsg(STARTING_GAME_ROUNDS_MSG)

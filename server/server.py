@@ -6,6 +6,7 @@ from .objects.client import Client
 from .globals.communication import *
 
 from typing import List
+import json
 
 
 class Server:
@@ -69,7 +70,14 @@ class Server:
             print("sent succesfull connection")
             
             async for msg in server:
+                if (client.gameSession):
+                    if (json.loads(msg)["MSG_TYPE"] == GET_CURRENT_COINS_MSG_TYPE):
+                        await client.sendMsg(CURRENT_COINS_MSG(client.coins))
+                        continue
                 client.messages.append(msg)
+                
+                    
+                
         except websockets.ConnectionClosed:
             print("Connection closed dirty")
         finally:
