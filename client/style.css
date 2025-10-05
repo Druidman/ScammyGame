@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
     height: 100%;
@@ -13,6 +14,10 @@ html, body {
 button {
     all: unset;
     cursor: pointer;
+}
+input {
+    all: unset;
+    cursor: text;
 }
 
 
@@ -34,7 +39,8 @@ body {
     justify-content: center;
     align-items: center;
 }
-.queueMsgBox {
+
+.waitingMsgBox {
     width: 50%;
     height: 50%;
     display: flex;
@@ -46,7 +52,7 @@ body {
 
 }
 
-#welcomeScreen > div{
+.infoDiv {
     width: 50%;
     height: 50%;
     background-color: inherit;
@@ -58,22 +64,24 @@ body {
     border: 2px solid #778DA9;
     border-radius: 10px;
 }
-#welcomeScreen > div > h1 {
+
+#welcomeScreen>.infoDiv>h1 {
     width: 50%;
-    
+
     text-align: center;
     color: #0D1B2A;
     letter-spacing: 3px;
     font-size: 5vw;
 }
-#playWrapper {
+
+.infoDiv>div {
     width: 90%;
     height: 40%;
-    
+
 
 }
 
-#playButton {
+.mainButton {
     width: 100%;
     height: 100%;
     background-color: #778DA9;
@@ -85,7 +93,80 @@ body {
     letter-spacing: 5px;
     transition: 300ms;
 }
-#playButton:hover {
+
+.mainButton:hover {
     background-color: #415A77;
 }
 
+
+#gameReadyScreen>.infoDiv>h1 {
+    width: 50%;
+
+    text-align: center;
+    color: #0D1B2A;
+    letter-spacing: 3px;
+    font-size: 5vw;
+}
+
+#gameChatScreen {
+    flex-direction: column;
+}
+#gameChatScreen > div{
+    width: 80%;
+    height: 80%;
+    padding: 20px;
+    
+    border: 3px solid #778DA9;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+#chatBox {
+    width: 100%;
+    height: 90%;
+    background-color: inherit;
+    border: 2px solid #0D1B2A;
+    border-radius: 5px;
+    padding: 10px;
+    overflow-y: scroll;
+}
+#chatBox .chatMsgBox {
+    width: 100%;
+    height: 5%;
+    display: flex;
+    align-items: center;
+
+    padding: 5px;
+}
+#chatBox .chatMsg {
+    height: 100%;
+    color: white;
+    background-color: #415A77;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+   
+}
+
+.chatMsgBoxLeft {
+    justify-content: start;
+}
+.chatMsgBoxRight {
+    justify-content: end;
+}
+
+#gameChatInputWrapper {
+    width: 100%;
+    height: 3%;
+    border: 2px solid #0D1B2A;
+    border-radius: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+#chatInput{
+    width: 100%;
+    height: 100%;
+}

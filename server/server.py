@@ -50,7 +50,8 @@ class Server:
                 await game.player1.sendMsg(GAME_ASSIGNED_MSG(True))
                 await game.player2.sendMsg(GAME_ASSIGNED_MSG(True))
 
-                asyncio.create_task(game.runGame())
+                task = asyncio.create_task(game.runGame())
+                game.current_task = task
                 print("created new gameSession!")
             await asyncio.sleep(0)
 

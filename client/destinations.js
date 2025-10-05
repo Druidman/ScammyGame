@@ -14,6 +14,17 @@ export function switchToLobbyWaiter(){
     animateQueueWaitUntilNotVisible("lobbyWaiter")
 }
 
+export function switchToGameReadyWaiter(){
+    document.getElementById("gameReadyInfoDiv").style.display = "none"
+    document.getElementById("gameReadyWaiter").style.display = "flex"
+    animateQueueWaitUntilNotVisible("gameReadyWaiter")
+}
+export function switchToGameReadyInfoBox(){
+    document.getElementById("gameReadyInfoDiv").style.display = "flex"
+    document.getElementById("gameReadyWaiter").style.display = "none"
+}
+
+
 
 
 export function hideAllScreens(){
@@ -55,6 +66,7 @@ export function goToGameReadyScreen(){
     document.getElementById("gameReadyScreen").style.display = "flex"
 
     setCurrentScreen(Data.GAME_READY_SCREEN)
+    switchToGameReadyInfoBox()
 }
 
 export function goToGameChatScreen(){

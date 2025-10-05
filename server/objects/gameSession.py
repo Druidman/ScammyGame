@@ -12,13 +12,15 @@ class GameSession:
         self.ended: bool = False
 
 
-        self.CHATTING_PHASE_TIME = 10 #s\
+        self.CHATTING_PHASE_TIME = 30 #s\
         self.COINS_PER_ROUND = 50
 
         self.guesser = self.player1
         self.responder = self.player2
 
         self.available_questions = GAME_QUESTIONS
+
+        self.current_task = None
 
     async def checkIfPlayersReady(self) -> bool:
         await self.player1.sendMsg(REQUEST_STATUS_MSG)
@@ -40,6 +42,7 @@ class GameSession:
             return False
         
     async def stop(self):
+        self.current_task.cancel()
         if (self.ended):
             return
         if (not self.player1.closed):
@@ -47,6 +50,8 @@ class GameSession:
         if (not self.player2.closed):
             await self.player2.sendMsg(DISCONNECT_MSG)
         self.ended = True
+        
+        print("Stopping game!!!")
     
     async def handleChatMsg(self,msg: str, receiver):
         if (msg == NONE_MSG):

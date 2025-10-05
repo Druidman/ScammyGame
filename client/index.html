@@ -9,35 +9,46 @@
 </head>
 <body>
     <section id="welcomeScreen" class="mainSection">
-        <div>
+        <div class="infoDiv">
             <h1>Scammy</h1>
-            <div id="playWrapper">
+            <div>
                 <button id="playButton" class="mainButton">PLAY</button>
             </div>
         </div>
     </section>
 
     <section id="gameQueueScreen" class="mainSection" style="display: none;">
-        <div id="conectionWaiter" style="display: none;" class="queueMsgBox">
+        <div id="conectionWaiter" style="display: none;" class="waitingMsgBox">
             Connecting...
         </div>
-        <div id="lobbyWaiter" style="display: none;" class="queueMsgBox">
+        <div id="lobbyWaiter" style="display: none;" class="waitingMsgBox">
             Waiting for players...
         </div>
     </section>
 
     <section id="gameReadyScreen" class="mainSection" style="display: none;">
-        <div>
+        <div class="infoDiv" id="gameReadyInfoDiv">
+            
             <h1>Get Ready!</h1>
-            <button id="readyButton" style="display: none;">I'm Ready!</button>
+            <div>
+                <button id="readyButton" class="mainButton" style="display: none;">I'm Ready!</button>
+            </div>
+        </div>
+        <div id="gameReadyWaiter" style="display: none;" class="waitingMsgBox">
+            Waiting for opponent to get ready...
         </div>
     </section>
     
     <section id="gameChatScreen" class="mainSection" style="display: none;">
         <div>
-            <h2>Chat Phase</h2>
-            <p>Communicate with your opponent!</p>
+            <div id="chatBox">
+                
+            </div>
+            <div id="gameChatInputWrapper">
+                <input type="text" id="chatInput" placeholder="Type smth to your opponent...">
+            </div>
         </div>
+        
     </section>
     
     <section id="gameScreen" class="mainSection" style="display: none;">
