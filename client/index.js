@@ -37,7 +37,6 @@ function handleMsg(msg){
     let data = JSON.parse(msg)
     if (data["MSG_TYPE"] == Data.DISCONNECT_MSG_TYPE){
         console.log("Server disconnected")
-        goToGameStartScreen()
     }
     if (currentScreen == Data.START_SCREEN){
         if (data["MSG_TYPE"] == Data.CONNECTION_MSG_TYPE){
@@ -100,7 +99,7 @@ function handleMsg(msg){
         }
         if (data["MSG_TYPE"] == Data.PLAYER_LOST_MSG_TYPE){
             console.log("lost")
-            document.getElementById("endScreen").textContent += "YOU LOST!"
+            document.getElementById("endScreenText").textContent += "YOU LOST!"
         }
     }
 }
@@ -114,15 +113,6 @@ function goToGameStartScreen(){
     document.getElementById("endScreen").style.display = "none"
 
     currentScreen = Data.START_SCREEN
-}
-function goToGameWaiterScreen(){
-    document.getElementById("gameWaiter").style.display = "block"
-    
-
-    document.getElementById("chatBox").style.display = "none"
-    document.getElementById("gameBox").style.display = "none"
-    document.getElementById("endScreen").style.display = "none"
-    currentScreen = Data.GAME_WAITER_SCREEN
 }
 function goToGameChatScreen(){
     document.getElementById("chatBox").style.display = "block"
