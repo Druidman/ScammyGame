@@ -13,7 +13,7 @@ var coins = 0
 export var currentScreen = Data.WELCOME_SCREEN
 
 
-
+const URL = "wss://scammygame-production.up.railway.app"
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -43,7 +43,7 @@ async function connectToServer() {
 
 
     await sleep(1000) // cool feeling
-    socket = new WebSocket("ws://localhost:8080");
+    socket = new WebSocket(URL);
 
     socket.addEventListener("open", () => {
         console.log("Connected");
