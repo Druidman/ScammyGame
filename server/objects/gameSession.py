@@ -183,6 +183,23 @@ class GameSession:
             if not await self.player2.sendMsg(GAME_TIE_MSG):
                 print("sending tie msg con wen wrong for player2")
         
+    async def startRounds(self):
+        await self.player1.sendMsg(STARTING_GAME_ROUNDS_MSG)
+        await self.player2.sendMsg(STARTING_GAME_ROUNDS_MSG)
+
+
+        self.guesser = self.player1
+        self.responder = self.player2
+        for i in range(5):
+            print(f"Round {i}. START!")
+            await self.startRound(i)
+            print(f"Round {i}. END!")
+
+
+        await self.player1.sendMsg(ENDING_GAME_ROUNDS_MSG)
+        await self.player2.sendMsg(ENDING_GAME_ROUNDS_MSG)
+        print("game done")
+
 
 
 
@@ -205,13 +222,8 @@ class GameSession:
 
 
         print("Starting rounds....")
-        self.guesser = self.player1
-        self.responder = self.player2
-        for i in range(5):
-            print(f"Round {i}. START!")
-            await self.startRound(i)
-            print(f"Round {i}. END!")
-        print("game done")
+        await self.startRounds()
+        
 
         print("Getting game results...")
         await self.summarizeGame()

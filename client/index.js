@@ -1,152 +1,123 @@
 
 import * as Data from "./data.js"
+import * as Destinations from "./destinations.js"
 
-const socket = new WebSocket("ws://localhost:8080");
+var socket = undefined
 
-var currentScreen = Data.START_SCREEN
+export var currentScreen = Data.WELCOME_SCREEN
 
-socket.addEventListener("open", () => {
-    console.log("Connected");
-});
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+export function setCurrentScreen(screen) {
+    currentScreen = screen;
+}
 
-// Listen for messages
-socket.addEventListener("message", (event) => {
-    handleMsg(event.data)
-});
-
-document.getElementById("chatInput").addEventListener("keydown", (event) =>{
-    if (event.key.toLowerCase() == "enter"){
-        socket.send(JSON.stringify(Data.CHAT_MSG(document.getElementById("chatInput").value)))
-    }
+document.getElementById("playButton").addEventListener("click", async ()=>{
+    Destinations.goToGameQueueScreen()
+    await connectToServer()
 })
-document.getElementById("guesserTruthButton").addEventListener("click", (event) =>{
-    socket.send(JSON.stringify(Data.GAME_QUESTION_VERIFY_REPLY(true)))
-})
-document.getElementById("guesserFalseButton").addEventListener("click", (event) =>{
-    socket.send(JSON.stringify(Data.GAME_QUESTION_VERIFY_REPLY(false)))
-})
+function sendMsgToServer(msg){
+    let data = JSON.stringify(msg)
+    socket.send(data)
+}
+async function connectToServer(){
+    
+    
+    await sleep(1000) // cool feeling
+    socket = new WebSocket("ws://localhost:8080");
+    
+    socket.addEventListener("open", () => {
+        console.log("Connected");
+        
+    });
+    
+    // Listen for messages
+    socket.addEventListener("message", (event) => {
+        handleMsg(event.data)
+    });
+}
 
-document.getElementById("responderTruthButton").addEventListener("click", (event) =>{
-    socket.send(JSON.stringify(Data.GAME_QUESTION_REPLY(true)))
-})
-document.getElementById("responderFalseButton").addEventListener("click", (event) =>{
-    socket.send(JSON.stringify(Data.GAME_QUESTION_REPLY(false)))
-})
+
+function displayStatusReadyButton(){
+    document.getElementById("readyButton").style.display = "flex"
+    document.getElementById("readyButton").addEventListener("click",()=>{
+        sendMsgToServer(Data.STATUS_MSG(true))
+    })
+}
+
+
 
 function handleMsg(msg){
     let data = JSON.parse(msg)
     if (data["MSG_TYPE"] == Data.DISCONNECT_MSG_TYPE){
         console.log("Server disconnected")
+        Destinations.goToWelcomeScreen()
+        return
     }
-    if (currentScreen == Data.START_SCREEN){
-        if (data["MSG_TYPE"] == Data.CONNECTION_MSG_TYPE){
-            document.getElementById("connectingWaiter").style.backgroundColor = "green"
-        }
-        if (data["MSG_TYPE"] == Data.GAME_ASSIGNED_MSG_TYPE){
-            document.getElementById("gameAssignementWaiter").style.backgroundColor = "green"
-        }
-        if (data["MSG_TYPE"] == Data.REQUEST_STATUS_MSG_TYPE){
-            socket.send(JSON.stringify(Data.STATUS_MSG(true)))
-            
-        }
-        if (data["MSG_TYPE"] == Data.START_CHATTING_PHASE_MSG_TYPE){
-            goToGameChatScreen()
-        }
-    }
-    else if (currentScreen == Data.CHAT_BOX_SCREEN){
-        if (data["MSG_TYPE"] == Data.CHAT_MSG_TYPE){
-            document.getElementById("messagesFromPlayer2").textContent += data["VALUE"]
-        }
-        if (data["MSG_TYPE"] == Data.END_CHATTING_PHASE_MSG_TYPE){
-            goToGameScreen()
-        }
-    }
-    else if (currentScreen == Data.GAME_BOX_SCREEN){
-        if (data["MSG_TYPE"] == Data.ROUND_START_MSG_TYPE){
-            // idk
-        }
-        if (data["MSG_TYPE"] == Data.GAME_QUESTION_MSG_TYPE){
-            document.getElementById("guesserBox").style.display = "none"
-            document.getElementById("responderBox").style.display = "block"
-            document.getElementById("responderQuestionBox").textContent = data["VALUE"]["QUESTION"] + "  " + data["VALUE"]["OPERATION"]
-            
-        }
-        if (data["MSG_TYPE"] == Data.GAME_QUESTION_VERIFY_TYPE){
-            document.getElementById("responderBox").style.display = "none"
-            document.getElementById("guesserBox").style.display = "block"
-            document.getElementById("guesserQuestionBox").textContent = data["VALUE"]["QUESTION"] + "  " + data["VALUE"]["ANSWER"]
-        }
-        if (data["MSG_TYPE"] == Data.ROUND_END_MSG_TYPE){
-            document.getElementById("responderQuestionBox").textContent = ""
-            document.getElementById("guesserQuestionBox").textContent = ""
-            document.getElementById("responderBox").style.display = "none"
-            document.getElementById("guesserBox").style.display = "none"
-            
-        }
-        if (data["MSG_TYPE"] == Data.GAME_SUMMARY_MSG_TYPE){
-            goToEndScreen()
-        }
-
-    }
-    else if (currentScreen == Data.GAME_END_SCREEN){
-        if (data["MSG_TYPE"] == Data.PLAYER_WON_MSG_TYPE){
-            console.log("WON")
-            document.getElementById("endScreen").textContent += "YOU WON!"
-        }
-        if (data["MSG_TYPE"] == Data.GAME_TIE_MSG_TYPE){
-            console.log("tie")
-            document.getElementById("endScreen").textContent += "TIE!"
-        }
-        if (data["MSG_TYPE"] == Data.PLAYER_LOST_MSG_TYPE){
-            console.log("lost")
-            document.getElementById("endScreenText").textContent += "YOU LOST!"
-        }
-    }
-}
-
-function goToGameStartScreen(){
-
-
-    document.getElementById("gameWaiter").style.display = "none"
-    document.getElementById("chatBox").style.display = "none"
-    document.getElementById("gameBox").style.display = "none"
-    document.getElementById("endScreen").style.display = "none"
-
-    currentScreen = Data.START_SCREEN
-}
-function goToGameChatScreen(){
-    document.getElementById("chatBox").style.display = "block"
     
-
-    document.getElementById("gameWaiter").style.display = "none"
-    document.getElementById("gameBox").style.display = "none"
-    document.getElementById("endScreen").style.display = "none"
-
-    currentScreen = Data.CHAT_BOX_SCREEN
-}
-function goToGameScreen(){
-    document.getElementById("gameBox").style.display = "block"
-    
-
-    document.getElementById("gameWaiter").style.display = "none"
-    document.getElementById("chatBox").style.display = "none"
-    document.getElementById("endScreen").style.display = "none"
-
-    currentScreen = Data.GAME_BOX_SCREEN
-}
-
-function goToEndScreen(){
-    console.log("switch")
-    document.getElementById("endScreen").style.display = "block"
-    
-
-    document.getElementById("gameWaiter").style.display = "none"
-    document.getElementById("chatBox").style.display = "none"
-    document.getElementById("gameBox").style.display = "none"
-
-    currentScreen = Data.GAME_END_SCREEN
+    if (currentScreen == Data.GAME_QUEUE_SCREEN){
+        gameQueueScreenMsgHandler(data)
+    }
+    else if (currentScreen == Data.GAME_READY_SCREEN){
+        gameReadyScreenMsgHandler(data)
+    }
+    else if (currentScreen == Data.GAME_CHAT_SCREEN){
+        gameChatScreenMsgHandler(data)
+    }
+    else if (currentScreen == Data.GAME_SCREEN){
+        gameScreenMsgHandler(data)
+    }
+    else if (currentScreen == Data.GAME_SUMMARY_SCREEN){
+        gameSummaryMsgHandler(data)
+    }
 }
 
+function gameQueueScreenMsgHandler(data){
+    let msgType = data["MSG_TYPE"]
+
+    if (msgType == Data.CONNECTION_MSG_TYPE){
+        console.log("Connection established with server")
+        Destinations.switchToLobbyWaiter()
+    }
+    if (msgType == Data.GAME_ASSIGNED_MSG_TYPE){
+        console.log("Assigned game lobby!")
+        Destinations.goToGameReadyScreen()
+        console.log("Switched to game ready screen " + currentScreen)
+
+    }
+}
+function gameReadyScreenMsgHandler(data){
+    let msgType = data["MSG_TYPE"]
+    if (msgType == Data.REQUEST_STATUS_MSG_TYPE){
+        console.log("Requested msg status")
+        displayStatusReadyButton()
+    }
+    if (msgType == Data.START_CHATTING_PHASE_MSG_TYPE){
+        Destinations.goToGameChatScreen()
+    }
+}
+function gameChatScreenMsgHandler(data){
+    let msgType = data["MSG_TYPE"];
+    if (msgType == Data.END_CHATTING_PHASE_MSG_TYPE){
+        Destinations.goToGameScreen()
+    }
+}
+function gameScreenMsgHandler(data){
+    let msgType = data["MSG_TYPE"];
+    if (msgType == Data.ENDING_GAME_ROUNDS_MSG_TYPE){
+        Destinations.goToGameSummaryScreen()
+    }
+
+}
+function gameSummaryMsgHandler(data){
+
+    let msgType = data["MSG_TYPE"];
+    if (msgType == Data.GAME_SUMMARY_MSG_TYPE){
+        console.log("Game summary received");
+
+    }
+}
 
 
 

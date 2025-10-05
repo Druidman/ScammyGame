@@ -3,40 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyGame</title>
+    <title>Scammy</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 </head>
 <body>
+    <section id="welcomeScreen" class="mainSection">
+        <div>
+            <h1>Scammy</h1>
+            <div id="playWrapper">
+                <button id="playButton" class="mainButton">PLAY</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="gameQueueScreen" class="mainSection" style="display: none;">
+        <div id="conectionWaiter" style="display: none;" class="queueMsgBox">
+            Connecting...
+        </div>
+        <div id="lobbyWaiter" style="display: none;" class="queueMsgBox">
+            Waiting for players...
+        </div>
+    </section>
+
+    <section id="gameReadyScreen" class="mainSection" style="display: none;">
+        <div>
+            <h1>Get Ready!</h1>
+            <button id="readyButton" style="display: none;">I'm Ready!</button>
+        </div>
+    </section>
     
-    <div id="gameWaiter" class="mainBox" >
-        <p id="connectingWaiter">Connecting...</p>
-        <p id="gameAssignementWaiter">Game assigned...</p>
-    </div>
-
-    <div id="chatBox" class="mainBox" style="display: none;">
-        <div id="messagesFromPlayer2"></div>
-        <input id="chatInput" type="text" placeholder="Type here...">
-    </div>
-
-    <div id="gameBox" class="mainBox" style="display: none;">
-        <div id="guesserBox" style="display: none;">
-            <p id="guesserQuestionBox"></p>
-            <button id="guesserTruthButton">True</button>
-            <button id="guesserFalseButton">False</button>
+    <section id="gameChatScreen" class="mainSection" style="display: none;">
+        <div>
+            <h2>Chat Phase</h2>
+            <p>Communicate with your opponent!</p>
         </div>
-        <div id="responderBox" style="display: none;">
-            <p id="responderQuestionBox"></p>
-            <button id="responderTruthButton">True</button>
-            <button id="responderFalseButton">False</button>
+    </section>
+    
+    <section id="gameScreen" class="mainSection" style="display: none;">
+        <div>
+            <h2>Game On!</h2>
+            <p>Make your moves and play the game.</p>
         </div>
-
-    </div>
-
-    <div id="endScreen" style="display: none;">
-        <p>End Screen</p>
-        <div id="endScreenText"></div>
-        
-    </div>
+    </section>
+    
+    <section id="gameSummaryScreen" class="mainSection" style="display: none;">
+        <div>
+            <h2>Game Summary</h2>
+            <p>Here are the results of the game.</p>
+        </div>
+    </section>
+    
+    <section id="thankYouScreen" class="mainSection" style="display: none;">
+        <div>
+            <h2>Thank You!</h2>
+            <p>Thanks for playing Scammy!</p>
+        </div>
+    </section>
+    
     <script src="index.js" type="module"></script>
 </body>
 </html>
