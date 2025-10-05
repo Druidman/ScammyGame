@@ -71,7 +71,7 @@ class Server:
             
             async for msg in server:
                 if (json.loads(msg)["MSG_TYPE"] == PING_MSG_TYPE):
-                  
+                    await client.sendMsg(PING_MSG)
                     continue
                 
                 if (client.gameSession):

@@ -13,7 +13,7 @@ var coins = 0
 export var currentScreen = Data.WELCOME_SCREEN
 
 
-const URL = "wss://scammygame-production.up.railway.app"
+const URL = "wss://scammygame-production.up.railway.app" //"ws://localhost:8080" 
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -49,7 +49,7 @@ async function connectToServer() {
         console.log("Connected");
         setInterval(()=>{
             sendMsgToServer(Data.PING_MSG)
-        }, 500)
+        }, 700)
 
     });
 
@@ -211,6 +211,9 @@ function handleMsg(msg) {
         console.log("Server disconnected")
         location.reload()
         return
+    }
+    if (data["MSG_TYPE"] == Data.PING_MSG_TYPE){
+        console.log("received a ping")
     }
 
     if (currentScreen == Data.GAME_QUEUE_SCREEN) {
