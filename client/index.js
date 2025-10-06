@@ -49,7 +49,7 @@ async function connectToServer() {
         console.log("Connected");
         setInterval(()=>{
             sendMsgToServer(Data.PING_MSG)
-        }, 700)
+        }, 1500)
 
     });
 
